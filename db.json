@@ -1,0 +1,22 @@
+{
+  "posts": [
+    {
+      "id": 1,
+      "name": "saad",
+      "class": "5",
+      "email": "khansaadahmed007@gmail.com",
+      "mobile": "9865124565"
+    },
+    {
+      "id": 2,
+      "name": "sarthak",
+      "class": "3",
+      "email": "sadsa@123gmail@gmail.com",
+      "mobile": "78897897897"
+    }
+  ],
+  "comments": [],
+  "profile": {
+    "name": "tyicode"
+  }
+}
