@@ -1,7 +1,8 @@
-import { Component, OnInit } from '@angular/core';
-import { FormBuilder , FormGroup } from '@angular/forms';
+import { Component, OnInit} from '@angular/core';
+import { FormBuilder,FormGroup} from '@angular/forms';
 import { ApiService } from '../shared/api.service';
-import { StudentModel } from './student.model';
+import { StudentModel} from './student.model';
+import { Validators } from '@angular/forms';
 
 @Component({
   selector: 'app-student-dashboard',
@@ -10,120 +11,146 @@ import { StudentModel } from './student.model';
 })
 export class StudentDashboardComponent implements OnInit {
 
-  studentValue!:FormGroup;
+  studentValue!: FormGroup;
 
-  studentObj:StudentModel = new StudentModel;
+  studentObj: StudentModel = new StudentModel;
 
-  studentList:any=[];
+  studentList: any = [];
 
-  btnSaveShow: boolean= true;
-  btnUpdateShow: boolean= false;
+  btnSaveShow: boolean = true;
+  btnUpdateShow: boolean = false;
+  submitted = false;
 
 
 
-  constructor(private formbuilder:FormBuilder, private api:ApiService) { }
+  constructor(private formbuilder: FormBuilder, private api: ApiService) {}
 
   ngOnInit(): void {
 
     this.studentValue = this.formbuilder.group({
-      name:[''],
-      class:[''],
-      email:[''],
-      mobile:['']
+      name: ['', (Validators.required)],
+      class: ['', (Validators.required)],
+      email: ['', [Validators.required, Validators.pattern("^[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$")]],
+      mobile: ['', [Validators.required, Validators.pattern("^((\\+91-?)|0)?[0-9]{10}$")]]
 
     })
     this.getStudent();
   }
-    AddStudent(){
+  AddStudent() {
 
-      this.studentObj.name = this.studentValue.value.name;
-      this.studentObj.class = this.studentValue.value.class;
-      this.studentObj.email = this.studentValue.value.email;
-      this.studentObj.mobile = this.studentValue.value.mobile;
-      this.api.postStudent(this.studentObj).subscribe({next: (v) => {
-          console.log(v)
-        },
-          error: (e) => {
-            console.log(e)
-            alert("Error")
-          },        
-        
-          complete: () => {
-            console.log('Student record added!')
-            alert("Student record added!")
-            this.getStudent();
-            this.studentValue.reset();
-                      
-          }})
+    this.studentObj.name = this.studentValue.value.name;
+    this.studentObj.class = this.studentValue.value.class;
+    this.studentObj.email = this.studentValue.value.email;
+    this.studentObj.mobile = this.studentValue.value.mobile;
+    this.api.postStudent(this.studentObj).subscribe({
+      next: (v) => {
+        console.log(v)
+      },
+      error: (e) => {
+        console.log(e)
+        alert("Error")
+      },
 
-        }
-          getStudent(){
-              this.api.getStudent().subscribe(res => {
-                this.studentList = res;
-              })
+      complete: () => {
+        console.log('Student record added!')
+        alert("Student record added!")
+        this.getStudent();
+        this.studentValue.reset();
 
-          }
+      }
+    })
 
-          deleteStudent(data:any){
-            this.api.deleteStudent(data.id).subscribe({next: (v) => {
-              console.log(v)
-            },
-              error: (e) => {
-                console.log(e)
-                alert("Error")
-              },        
-            
-              complete: () => {
-                console.log('Student record deleted!')
-                alert("Student record deleted!")
-                this.getStudent();
-               
-                          
-              }})
-          }
+  }
+  getStudent() {
+    this.api.getStudent().subscribe(res => {
+      this.studentList = res;
+    })
 
-          editStudent(data:any){
-              this.studentValue.controls["name"].setValue(data.name);
-              this.studentValue.controls["class"].setValue(data.class);
-              this.studentValue.controls["email"].setValue(data.email);
-              this.studentValue.controls["mobile"].setValue(data.mobile);
-              this.studentObj.id = data.id;
-              this.showUpdate();
-          }
+  }
 
-          updateStudent(){
+  deleteStudent(data: any) {
+    this.api.deleteStudent(data.id).subscribe({
+      next: (v) => {
+        console.log(v)
+      },
+      error: (e) => {
+        console.log(e)
+        alert("Error")
+      },
 
-            this.studentObj.name = this.studentValue.value.name;
-      this.studentObj.class = this.studentValue.value.class;
-      this.studentObj.email = this.studentValue.value.email;
-      this.studentObj.mobile = this.studentValue.value.mobile;
-      
-      this.api.putStudent(this.studentObj,this.studentObj.id).subscribe({next: (v) => {
-          console.log(v)
-        },
-          error: (e) => {
-            console.log(e)
-            alert("Error")
-          },        
-        
-          complete: () => {
-            console.log('Student record Updated!')
-            alert("Student record Updated!")
-            this.getStudent();
-            this.studentValue.reset();
-            this.showSave();
-            this.studentObj.id = 0;
-                      
-          }})
-           }
+      complete: () => {
+        console.log('Student record deleted!')
+        alert("Student record deleted!")
+        this.getStudent();
 
-           showSave(){
-             this.btnSaveShow = true;
-             this.btnUpdateShow = false;
-           }
 
-           showUpdate(){
-            this.btnSaveShow = false;
-            this.btnUpdateShow = true;
-          }
-        }
+      }
+    })
+  }
+
+  editStudent(data: any) {
+    this.studentValue.controls["name"].setValue(data.name);
+    this.studentValue.controls["class"].setValue(data.class);
+    this.studentValue.controls["email"].setValue(data.email);
+    this.studentValue.controls["mobile"].setValue(data.mobile);
+    this.studentObj.id = data.id;
+    this.showUpdate();
+  }
+
+  updateStudent() {
+
+    this.submitted = true;
+    if (this.studentValue.invalid) {
+
+      return;
+    }
+    this.studentObj.name = this.studentValue.value.name;
+    this.studentObj.class = this.studentValue.value.class;
+    this.studentObj.email = this.studentValue.value.email;
+    this.studentObj.mobile = this.studentValue.value.mobile;
+    // this.onSubmit()
+
+    this.api.putStudent(this.studentObj, this.studentObj.id).subscribe({
+      next: (v) => {
+        console.log(v)
+      },
+      error: (e) => {
+        console.log(e)
+        alert("Error")
+      },
+
+      complete: () => {
+        console.log('Student record Updated!')
+        alert("Student record Updated!")
+        this.getStudent();
+        this.studentValue.reset();
+        this.showSave();
+        this.studentObj.id = 0;
+
+      }
+    })
+  }
+
+  showSave() {
+    this.btnSaveShow = true;
+    this.btnUpdateShow = false;
+  }
+
+  showUpdate() {
+    this.btnSaveShow = false;
+    this.btnUpdateShow = true;
+  }
+  onSubmit() {
+    this.submitted = true;
+    if (this.studentValue.invalid) {
+
+      return;
+    }
+    this.AddStudent();
+    //this.updateStudent();
+  }
+  get f() {
+    // this.submitted= true;
+    return this.studentValue.controls;
+  }
+}

@@ -10,7 +10,8 @@
 
         <div class="d-flex">
 
-          <button class="btn btn-success" data-bs-toggle="modal" data-bs-target="#staticBackdrop" type="submit"(click)="showSave()">Add Student</button>
+          <button class="btn btn-success" data-bs-toggle="modal" data-bs-target="#staticBackdrop" type="submit"
+            (click)="showSave()">Add Student</button>
         </div>
       </div>
     </div>
@@ -26,7 +27,7 @@
         <th>Mobile</th>
       </tr>
     </thead>
-
+    <!-- asdasd -->
     <tbody>
       <tr *ngFor="let student of studentList ">
         <td>{{student.id}}</td>
@@ -35,64 +36,97 @@
         <td>{{student.email}}</td>
         <td>{{student.mobile}}</td>
         <td>
-          <input type="button" data-bs-toggle="modal" (click)="editStudent(student)" data-bs-target="#staticBackdrop" value="Edit" class="btn btn-success me-2" />
+          <input type="button" data-bs-toggle="modal" (click)="editStudent(student)" data-bs-target="#staticBackdrop"
+            value="Edit" class="btn btn-success me-2" />
           <input type="button" value="Delete" (click)="deleteStudent(student)" class="btn btn-danger" />
         </td>
       </tr>
-      
+
     </tbody>
   </table>
 </div>
 
 
 
-  <!-- Modal -->
-  <div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
-    <div class="modal-dialog">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h5 class="modal-title" id="staticBackdropLabel">Student Registration</h5>
-          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-        </div>
+<!-- Modal -->
+<div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+  aria-labelledby="staticBackdropLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="staticBackdropLabel">Student Registration</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
 
-        <div class="modal-body">
-            <form [formGroup]="studentValue">
+      <div class="modal-body">
+        <form [formGroup]="studentValue" (ngSubmit)="onSubmit()">
 
-                <div class="mb-3">
-                  <label for="txtName" class="form-label">Name</label>
-                  <input type="text" formControlName="name" class="form-control" id="txtName" placeholder="Enter your name">
-                 
+          <div class="mb-3">
+            <label for="txtName" class="form-label">Name</label>
+            <input type="text" formControlName="name" class="form-control" id="txtName" placeholder="Enter your name"
+              [ngClass]="{ 'is-invalid': submitted && f['name'].errors }"/>
+            <div *ngIf="submitted && f['name'].errors" class="invalid-feedback">
+              <span *ngIf="f['name'].errors['required']">
+                Please enter your name
+              </span>
+            </div>
+
+          </div>
+
+          <div class="mb-3">
+            <label for="txtClass" class="form-label">Class</label>
+            <input type="text" formControlName="class" class="form-control" id="txtClass"
+              placeholder="Enter your class" [ngClass]="{ 'is-invalid': submitted && f['class'].errors }"/>
+              <div *ngIf="submitted && f['class'].errors" class="invalid-feedback">
+                <span *ngIf="f['class'].errors['required']">
+                  Please enter your name
+                </span>
+              </div>
+          </div>
+
+          <div class="mb-3">
+            <label for="txtEmail" class="form-label">Email ID</label>
+            <input type="email" class="form-control" formControlName="email" id="exampleInputEmail1"
+              placeholder="Enter your email id" [ngClass]="{ 'is-invalid': submitted && f['email'].errors }"/> 
+              <div *ngIf="submitted && f['email'].errors" class="invalid-feedback">
+                <span *ngIf="f['email'].errors['required']">
+                  Please enter your email:
+                </span>
+                <span *ngIf="f['email'].errors['pattern']">
+                  Please enter valid email:
+                </span>
+              </div>
+
+          </div>
+
+          <div class="mb-3">
+            <label for="txtMobile" class="form-label">Mobile</label>
+
+            <div class="input-group">
+              <div class="input-group-text">+91</div>
+
+              <input type="text" class="form-control" formControlName="mobile" id="txtMobile"
+                placeholder="Enter your Mobile number" [ngClass]="{ 'is-invalid': submitted && f['mobile'].errors }"/>
+                <div *ngIf="submitted && f['mobile'].errors" class="invalid-feedback">
+                  <span *ngIf="f['mobile'].errors['required']">
+                    Please enter your mobile number
+                  </span>
+                  <span *ngIf="f['mobile'].errors['pattern']">
+                    Please enter valid mobile number:
+                  </span>
                 </div>
+            </div>
+          </div>
+        </form>
 
-                <div class="mb-3">
-                    <label for="txtClass" class="form-label">Class</label>
-                    <input type="text" formControlName="class" class="form-control" id="txtClass" placeholder="Enter your class">
-                  </div>
-              
-                <div class="mb-3">
-                  <label for="txtEmail" class="form-label">Email ID</label>
-                  <input type="email" class="form-control" formControlName="email" id="exampleInputEmail1" placeholder="Enter your email id">
-                 
-                </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-warning" data-bs-dismiss="modal">Close</button>
+        <button type="button" *ngIf="btnSaveShow==true" class="btn btn-primary" (click)="onSubmit()">Save</button>
+        <button type="button" *ngIf="btnUpdateShow==true" class="btn btn-primary"
+          (click)="updateStudent()">Update</button>
 
-                <div class="mb-3">
-                    <label for="txtMobile" class="form-label">Mobile</label>
-
-                    <div class="input-group">
-                        <div class="input-group-text">+91</div>
-                    
-                    <input type="text" class="form-control" formControlName="mobile" id="txtMobile" placeholder="Enter your Mobile number">
-                    </div>
-                  </div>
-              </form>
-            
-        </div>
-        <div class="modal-footer">
-          <button type="button" class="btn btn-warning" data-bs-dismiss="modal">Close</button>
-          <button type="button" *ngIf="btnSaveShow==true" class="btn btn-primary" (click)="AddStudent()">Save</button>
-          <button type="button"  *ngIf="btnUpdateShow==true" class="btn btn-primary" (click)="updateStudent()">Update</button>
-
-        </div>
       </div>
     </div>
   </div>
+</div>
