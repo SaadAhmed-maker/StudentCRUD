@@ -36,8 +36,8 @@ export class StudentDashboardComponent implements OnInit {
     })
     this.getStudent();
   }
-  AddStudent() {
 
+  AddStudent() {
     this.studentObj.name = this.studentValue.value.name;
     this.studentObj.class = this.studentValue.value.class;
     this.studentObj.email = this.studentValue.value.email;
