@@ -28,8 +28,8 @@ export class StudentDashboardComponent implements OnInit {
   ngOnInit(): void {
 
     this.studentValue = this.formbuilder.group({
-      name: ['', (Validators.required)],
-      class: ['', (Validators.required)],
+      name: ['', [Validators.required, Validators.pattern("^[a-zA-Z]*$")]],
+      class: ['', [Validators.required,Validators.pattern ("^[a-zA-Z0-9_]*$")]],
       email: ['', [Validators.required, Validators.pattern("^[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$")]],
       mobile: ['', [Validators.required, Validators.pattern("^((\\+91-?)|0)?[0-9]{10}$")]]
 

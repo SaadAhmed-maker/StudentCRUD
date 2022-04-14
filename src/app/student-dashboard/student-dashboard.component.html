@@ -69,6 +69,10 @@
               <span *ngIf="f['name'].errors['required']">
                 Please enter your name
               </span>
+
+              <span *ngIf="f['name'].errors['pattern']">
+                Please enter valid name:
+              </span>
             </div>
 
           </div>
@@ -79,7 +83,10 @@
               placeholder="Enter your class" [ngClass]="{ 'is-invalid': submitted && f['class'].errors }"/>
               <div *ngIf="submitted && f['class'].errors" class="invalid-feedback">
                 <span *ngIf="f['class'].errors['required']">
-                  Please enter your name
+                  Please enter your class:
+                </span>
+                <span *ngIf="f['class'].errors['pattern']">
+                  Please enter valid class:
                 </span>
               </div>
           </div>
@@ -106,7 +113,7 @@
               <div class="input-group-text">+91</div>
 
               <input type="text" class="form-control" formControlName="mobile" id="txtMobile"
-                placeholder="Enter your Mobile number" [ngClass]="{ 'is-invalid': submitted && f['mobile'].errors }"/>
+                placeholder="Enter your Mobile number" minlength="10" maxlength="10" [ngClass]="{ 'is-invalid': submitted && f['mobile'].errors }"/>
                 <div *ngIf="submitted && f['mobile'].errors" class="invalid-feedback">
                   <span *ngIf="f['mobile'].errors['required']">
                     Please enter your mobile number
