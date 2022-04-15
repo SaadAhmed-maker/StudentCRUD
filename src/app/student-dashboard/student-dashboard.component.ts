@@ -98,7 +98,6 @@ export class StudentDashboardComponent implements OnInit {
   }
 
   updateStudent() {
-
     this.submitted = true;
     if (this.studentValue.invalid) {
 

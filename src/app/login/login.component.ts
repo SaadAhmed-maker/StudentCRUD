@@ -19,7 +19,7 @@ export class LoginComponent implements OnInit {
     })
   }
   login(data:any){
-    debugger;
+    
     this.http.post<any>("http://localhost:3000/login/",data)
     .subscribe(res=>{
 
