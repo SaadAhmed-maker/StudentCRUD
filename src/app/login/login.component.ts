@@ -53,6 +53,9 @@ export class LoginComponent implements OnInit {
     }
     if(this.loginform.get('email')?.value=="user@gmail.com" && this.loginform.get('password')?.value=="123" ){
       alert("login success")
+      
+      localStorage.setItem('user','1')
+      
       this.router.navigate(["/student-dash"]);
 
     }

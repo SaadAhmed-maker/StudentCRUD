@@ -3,6 +3,7 @@ import { FormBuilder,FormGroup} from '@angular/forms';
 import { ApiService } from '../shared/api.service';
 import { StudentModel} from './student.model';
 import { Validators } from '@angular/forms';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-student-dashboard',
@@ -23,7 +24,7 @@ export class StudentDashboardComponent implements OnInit {
 
 
 
-  constructor(private formbuilder: FormBuilder, private api: ApiService) {}
+  constructor(private formbuilder: FormBuilder, private api: ApiService, private router: Router) {}
 
   ngOnInit(): void {
 
@@ -153,5 +154,9 @@ export class StudentDashboardComponent implements OnInit {
     return this.studentValue.controls;
   }
 
+  Logout(){
+    localStorage.removeItem("user")
+    this.router.navigate(['login'])
+}
   
 }
