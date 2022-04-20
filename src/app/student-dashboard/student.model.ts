@@ -4,5 +4,7 @@ export class StudentModel{
     class?:string;
     email?:string;
     mobile?:string;
+    filename?:string;
+    skills?:any;
 
 }

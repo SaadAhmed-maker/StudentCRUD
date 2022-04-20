@@ -14,7 +14,7 @@
             (click)="showSave()">Add Student</button>
         </div>
         <div>
-          <button (click)="AddStudent()" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">Add Employee </button>
+        
           <button (click)="Logout()"  class="btn btn-danger mx-2">Logout</button>
       </div>
       </div>
@@ -29,6 +29,7 @@
         <th>Class</th>
         <th>Email</th>
         <th>Mobile</th>
+        <th>FileName</th>
       </tr>
     </thead>
     <!-- asdasd -->
@@ -39,6 +40,7 @@
         <td>{{student.class}}</td>
         <td>{{student.email}}</td>
         <td>{{student.mobile}}</td>
+        <td>{{student.filename}}</td>
         <td>
           <input type="button" data-bs-toggle="modal" (click)="editStudent(student)" data-bs-target="#staticBackdrop"
             value="Edit" class="btn btn-success me-2" />
@@ -71,7 +73,7 @@
               [ngClass]="{ 'is-invalid': submitted && f['name'].errors }"/>
             <div *ngIf="submitted && f['name'].errors" class="invalid-feedback">
               <span *ngIf="f['name'].errors['required']">
-                Please enter your name
+                Please enter your name:
               </span>
 
               <span *ngIf="f['name'].errors['pattern']">
@@ -128,6 +130,30 @@
                 </div>
             </div>
           </div>
+
+
+          <!-- <------------File Upload Feature------------> 
+
+          <div class="mb-3">
+
+            <input formControlName="filename" type="file" (change)="getFile($event)"> <br>
+             </div>
+          <!-- <------------File Upload Feature Ends------------> 
+
+         <!-- <p>{{studentValue.value | json}}</p> -->
+            
+         <!-- <---------------------Form Array Starts-------------------> 
+            <div class="form-group" formArrayName="skills">
+              <label>Skills</label>
+              <ng-container *ngFor="let skill of studentValue.get('skills')?.value">
+                <input type="text" class="form-control mt-2" formControlName="" autocomplete="off" placeholder="Add your skill">
+              </ng-container>
+              <button (click)="onAddSkills()" class="btn btn-light btn-sm mt-3 btn-add">
+                <i>+</i>Add Skills</button>
+            </div>
+
+        <!-- <-------------------FORM ARRAY ENDS--------------------> 
+
         </form>
 
       </div>

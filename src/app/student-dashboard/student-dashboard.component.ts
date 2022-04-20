@@ -1,9 +1,10 @@
 import { Component, OnInit} from '@angular/core';
-import { FormBuilder,FormGroup} from '@angular/forms';
+import { FormArray, FormBuilder,FormControl,FormGroup} from '@angular/forms';
 import { ApiService } from '../shared/api.service';
 import { StudentModel} from './student.model';
 import { Validators } from '@angular/forms';
 import { Router } from '@angular/router';
+import { HttpClient } from '@angular/common/http';
 
 @Component({
   selector: 'app-student-dashboard',
@@ -12,6 +13,7 @@ import { Router } from '@angular/router';
 })
 export class StudentDashboardComponent implements OnInit {
 
+  
   studentValue!: FormGroup;
 
   studentObj: StudentModel = new StudentModel;
@@ -24,7 +26,8 @@ export class StudentDashboardComponent implements OnInit {
 
 
 
-  constructor(private formbuilder: FormBuilder, private api: ApiService, private router: Router) {}
+  constructor(private formbuilder: FormBuilder, private api: ApiService, private router: Router , 
+    private http:HttpClient) {}
 
   ngOnInit(): void {
 
@@ -32,10 +35,22 @@ export class StudentDashboardComponent implements OnInit {
       name: ['', [Validators.required, Validators.pattern("^[a-zA-Z]*$")]],
       class: ['', [Validators.required,Validators.pattern ("^[a-zA-Z0-9_]*$")]],
       email: ['', [Validators.required, Validators.pattern("^[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$")]],
-      mobile: ['', [Validators.required, Validators.pattern("^((\\+91-?)|0)?[0-9]{10}$")]]
+      mobile: ['', [Validators.required, Validators.pattern("^((\\+91-?)|0)?[0-9]{10}$")]],
+      filename: [''],
+      
+      // <-----------------------FORM ARRAY STARTS----------------->
+      skills: new FormArray([
+        new FormControl(null)
+      
+        
+      ])
+
+      //<------------------------FORM ARRAY ENDS------------------------->
 
     })
-    this.getStudent();
+      this.getStudent();
+
+
   }
 
   AddStudent() {
@@ -43,6 +58,7 @@ export class StudentDashboardComponent implements OnInit {
     this.studentObj.class = this.studentValue.value.class;
     this.studentObj.email = this.studentValue.value.email;
     this.studentObj.mobile = this.studentValue.value.mobile;
+    this.studentObj.filename = this.studentValue.value.filename;
     this.api.postStudent(this.studentObj).subscribe({
       next: (v) => {
         console.log(v)
@@ -60,8 +76,8 @@ export class StudentDashboardComponent implements OnInit {
 
       }
     })
-
   }
+
   getStudent() {
     this.api.getStudent().subscribe(res => {
       this.studentList = res;
@@ -140,7 +156,10 @@ export class StudentDashboardComponent implements OnInit {
     this.btnSaveShow = false;
     this.btnUpdateShow = true;
   }
+
+  
   onSubmit() {
+    
     this.submitted = true;
     if (this.studentValue.invalid) {
 
@@ -158,5 +177,50 @@ export class StudentDashboardComponent implements OnInit {
     localStorage.removeItem("user")
     this.router.navigate(['login'])
 }
+
+// <---------------File upload Feature----------->
+  name:string = ""
+  file:any;
+
+  getName(name: string) {
+    this.name = name;
+  }
+
+  getFile(event:any) {
+    this.file = event.target.files[0];
+    console.log("file",this.file);
   
-}
+  
+  }
+
+  submitData(){
+
+      let formData = new FormData();
+      formData.set("name", this.name)
+      formData.set("file",this.file)
+      this.studentObj.filename = this.studentValue.value.filename;
+
+      this.api.postStudent(this.studentObj).subscribe({
+        next: (v) => {
+          console.log(v)
+        },
+        error: (e) => {
+          console.log(e)
+          alert("Error")
+        },
+  
+        // complete: () => {
+        //   console.log('Student record added!')
+        //   alert("Student record added!")
+        //   this.getStudent();
+        //   this.studentValue.reset();
+  
+        })
+       }
+
+        // <-------------------------FormArray-------------->
+       onAddSkills(){
+         (<FormArray>this.studentValue.get('skills')).push(new FormControl(null))
+       }
+ // <-------------------------FormArray-------------->
+    }
